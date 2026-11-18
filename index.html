@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#191610">
+<meta name="description" content="دعوة زفاف محمد يونس ونهى أشرف · ٢٣ ديسمبر ٢٠٢٦ · قاعة الأوركيد، بني سويف">
+<meta property="og:type" content="website">
+<meta property="og:title" content="محمد ونهى | دعوة زفاف">
+<meta property="og:description" content="شاركونا فرحتنا يوم الأربعاء ٢٣ ديسمبر ٢٠٢٦">
+<title>محمد ونهى | دعوة زفاف</title>
+<link rel="stylesheet" href="./src/style.css">
+<script type="module" src="./src/app.js"></script>
+</head>
+<body>
+<audio id="wedding-audio" preload="none" aria-hidden="true"></audio>
+<header class="topbar">
+  <img class="brand brand-monogram" data-monogram src="/assets/monogram-ar.svg" alt="" width="48" height="45">
+  <div class="controls"><button id="sound" type="button" aria-pressed="false" hidden></button><button id="language" type="button" lang="en">EN</button></div>
+</header>
+<section id="cover" class="cover" aria-labelledby="cover-title">
+  <h1 class="visually-hidden" id="cover-title" data-copy="short"></h1>
+  <button type="button" class="envelope" id="seal" aria-labelledby="open-label">
+    <img class="envelope-poster" src="/assets/envelope-poster-ar.jpg" alt="" width="720" height="1280" fetchpriority="high">
+    <video id="opening-video" aria-hidden="true" muted playsinline preload="auto" poster="/assets/envelope-poster-ar.jpg">
+      <source src="/assets/envelope-opening-ar.webm" type="video/webm">
+    </video>
+    <span class="open-caption"><span aria-hidden="true">⌃</span><span id="open-label" data-copy="open"></span></span>
+  </button>
+</section>
+<main id="invitation" hidden>
+  <section class="hero" aria-labelledby="invitation-title">
+    <div class="invitation-card">
+      <div class="hero-photo"><img src="/assets/together-cutout.png" alt="" data-alt="togetherAlt" width="1050" height="960"></div>
+      <img class="card-initial card-initial-left" data-monogram aria-hidden="true" src="/assets/monogram-ar.svg" alt="">
+      <img class="card-initial card-initial-right" data-monogram aria-hidden="true" src="/assets/monogram-ar.svg" alt="">
+      <h2 id="invitation-title" tabindex="-1" data-copy="short"></h2>
+      <p class="hero-date" data-copy="cardDate"></p>
+      <p class="hero-weekday" data-copy="weekday"></p>
+    </div>
+    <a class="down" href="#letter"><span data-copy="read"></span><span aria-hidden="true">⌄</span></a>
+  </section>
+  <section class="letter section" id="letter">
+    <div class="ornament" aria-hidden="true">♡ ◇ ♡</div>
+    <p class="verse-source" data-copy="verseSource"></p>
+    <p class="verse" dir="rtl" lang="ar">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ</p>
+    <p class="verse-source" data-copy="verseEnd"></p>
+    <p class="letter-text" data-copy="familyIntro"></p>
+    <div class="family-pair"><strong data-copy="groomFamily"></strong><strong data-copy="brideFamily"></strong></div>
+    <p class="letter-text" data-copy="invite"></p>
+    <div class="family-pair couple-pair">
+      <div><small data-copy="groomTitle"></small><h2 data-copy="groomName"></h2></div>
+      <div><small data-copy="brideTitle"></small><h2 data-copy="brideName"></h2></div>
+    </div>
+    <p class="ceremony-date" data-copy="date"></p>
+    <p class="countdown-caption" data-copy="countdown"></p>
+    <div class="countdown">
+      <div><strong data-count="days">00</strong><span data-copy="days"></span></div>
+      <div><strong data-count="hours">00</strong><span data-copy="hours"></span></div>
+      <div><strong data-count="minutes">00</strong><span data-copy="minutes"></span></div>
+      <div><strong data-count="seconds">00</strong><span data-copy="seconds"></span></div>
+    </div>
+  </section>
+  <section class="dress section">
+    <div class="dress-card">
+      <h2 data-copy="dress"></h2>
+      <div class="ornament" aria-hidden="true">◇</div>
+      <p data-copy="dressLine"></p>
+      <small data-copy="dressNote"></small>
+      <div class="ornament" aria-hidden="true">✦</div>
+    </div>
+  </section>
+  <section id="rsvp" class="rsvp section">
+    <div class="ornament" aria-hidden="true">✦</div>
+    <p class="reply-kicker" data-copy="heart"></p>
+    <h2 data-copy="guestBook"></h2>
+    <p id="rsvp-intro" data-copy="rsvpIntro"></p>
+    <div class="reply-card">
+      <span class="reply-seal" aria-hidden="true">✦</span>
+      <form aria-describedby="rsvp-status">
+        <label><span data-copy="name"></span><input name="name" autocomplete="name" required maxlength="120" data-placeholder="nameHint"></label>
+        <label><span data-copy="guestMessage"></span><textarea name="message" maxlength="500" rows="5" data-placeholder="noteHint"></textarea></label>
+        <details class="attendance-details">
+          <summary data-copy="attendanceOptional"></summary>
+          <div class="form-row"><label><span data-copy="attendance"></span><select name="attendance"><option value="note" data-copy="choose"></option><option value="yes" data-copy="yes"></option><option value="no" data-copy="no"></option></select></label>
+          <label id="guest-label"><span data-copy="guests"></span><input type="number" name="guests" value="0" min="0" step="1"></label></div>
+        </details>
+        <button class="primary" type="submit" data-copy="send" disabled></button>
+      </form>
+      <p id="rsvp-status" role="status"></p>
+    </div>
+    <p class="reply-signature" data-copy="short"></p>
+    <p class="reply-caption" data-copy="presence"></p>
+  </section>
+  <section class="venue section">
+    <div class="ornament" aria-hidden="true">✦</div>
+    <h2 data-copy="where"></h2>
+    <p data-copy="venueLead"></p>
+    <h3 data-copy="hotel"></h3>
+    <p class="hall-name" data-copy="hall"></p>
+    <p class="address" data-copy="address"></p>
+    <div class="map-wrap">
+      <a id="directions" class="primary" target="_blank" rel="noopener" data-copy="directions"></a>
+      <div id="map"></div>
+    </div>
+    <small data-copy="pinNote"></small>
+    <div class="ornament" aria-hidden="true">✦</div>
+    <p data-copy="end"></p>
+  </section>
+  <footer class="end section">
+    <img class="footer-monogram" data-monogram src="/assets/monogram-ar.svg" alt="" width="150" height="75">
+    <button type="button" class="primary" id="zaffa" data-copy="zaffa" hidden></button>
+    <button id="replay" type="button" data-copy="replay"></button>
+  </footer>
+</main>
+</body>
+</html>
+
+
+
+
+
+
