@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>رسائل الضيوف</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap">
+<style>
+:root{--ink:#684638;--soft:#8e6c5b;--line:#b08a5b52;--bg:#f4eee4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.8 "Amiri",Tahoma,serif}
+main{max-width:720px;margin:auto;padding:28px 16px 60px}
+h1{font-size:30px;margin:0 0 4px;text-align:center}
+.sub{text-align:center;color:var(--soft);margin:0 0 22px;font-size:15px}
+[hidden]{display:none!important}
+.box{background:#fffdf9;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 18px 50px #583b2e14}
+label{display:block;margin-bottom:6px}
+input{width:100%;padding:12px 14px;border:1px solid #dccdbc;border-radius:14px;background:#fcfaf6;color:var(--ink);font:inherit}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:14px;padding:10px 18px;background:#684638;color:#fff9f0}
+button.ghost{background:transparent;color:var(--ink)}
+#login form{display:grid;gap:14px}
+#error{color:#a3382c;margin:0;min-height:1.8em}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:#fffdf9;border:1px solid var(--line);border-radius:18px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-size:30px;line-height:1.2}
+.stat span{font-size:14px;color:var(--soft)}
+.bar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px;font-size:15px;color:var(--soft)}
+.bar div{display:flex;gap:8px}
+.bar button{padding:6px 14px;font-size:15px}
+.card{background:#fffdf9;border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin-bottom:12px}
+.card header{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.card strong{font-size:21px}
+.badge{font-size:14px;padding:1px 12px;border-radius:20px;border:1px solid var(--line);color:var(--soft)}
+.badge.yes{background:#e9f1e4;color:#3f6a35}
+.badge.no{background:#f6e6e2;color:#a3382c}
+.card p{margin:8px 0 6px;white-space:pre-wrap;overflow-wrap:anywhere}
+.card time{font-size:14px;color:var(--soft)}
+#empty{text-align:center;color:var(--soft)}
+</style>
+</head>
+<body>
+<main>
+  <h1>رسائل الضيوف</h1>
+  <p class="sub">بتتحدّث لوحدها كل نصف دقيقة تقريبًا</p>
+
+  <section id="login" class="box">
+    <form>
+      <div><label for="pw">كلمة السر</label><input id="pw" type="password" autocomplete="current-password" required></div>
+      <p id="error" role="alert"></p>
+      <button type="submit">دخول</button>
+    </form>
+  </section>
+
+  <section id="board" hidden>
+    <div class="stats">
+      <div class="stat"><b id="stat-messages">0</b><span>رسالة</span></div>
+      <div class="stat"><b id="stat-yes">0</b><span>حضور مؤكد (مع المرافقين)</span></div>
+      <div class="stat"><b id="stat-no">0</b><span>اعتذار</span></div>
+    </div>
+    <div class="bar">
+      <span id="updated"></span>
+      <div><button class="ghost" id="refresh" type="button">تحديث الآن</button><button class="ghost" id="logout" type="button">خروج</button></div>
+    </div>
+    <div id="list"></div>
+    <p id="empty" hidden>لسه مفيش رسائل.</p>
+  </section>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const KEY = 'guestbook-key';
+const store = (() => { try { return window.localStorage; } catch { return null; } })();
+let password = (store && store.getItem(KEY)) || '';
+const items = new Map();
+let latest = '';
+
+const LABELS = { yes: 'هيحضر', no: 'معتذر', note: 'رسالة فقط' };
+const timeFormat = new Intl.DateTimeFormat('ar-EG', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Cairo' });
+
+function show(loggedIn) { $('#login').hidden = loggedIn; $('#board').hidden = !loggedIn; }
+
+async function load() {
+  const url = '/api/messages' + (latest ? '?since=' + encodeURIComponent(latest) : '');
+  const response = await fetch(url, { headers: { Authorization: 'Bearer ' + password }, cache: 'no-store' });
+  if (response.status === 401) throw new Error('auth');
+  if (!response.ok) throw new Error('server');
+  const data = await response.json();
+  for (const item of data.items) {
+    items.set(item.id, item);
+    if (!latest || Date.parse(item.receivedAt) > Date.parse(latest)) latest = item.receivedAt;
+  }
+}
+
+function render() {
+  const list = [...items.values()].sort((a, b) => Date.parse(b.receivedAt) - Date.parse(a.receivedAt));
+  const yes = list.filter(x => x.attendance === 'yes');
+  $('#stat-messages').textContent = list.filter(x => x.message).length;
+  $('#stat-yes').textContent = yes.length + yes.reduce((n, x) => n + x.guests, 0);
+  $('#stat-no').textContent = list.filter(x => x.attendance === 'no').length;
+  $('#empty').hidden = list.length > 0;
+  const box = $('#list');
+  box.replaceChildren();
+  for (const item of list) {
+    const card = document.createElement('article');
+    card.className = 'card';
+    const head = document.createElement('header');
+    const name = document.createElement('strong');
+    name.textContent = item.name;
+    const badge = document.createElement('span');
+    badge.className = 'badge ' + item.attendance;
+    badge.textContent = LABELS[item.attendance] + (item.attendance === 'yes' && item.guests ? ' + ' + item.guests : '');
+    head.append(name, badge);
+    card.append(head);
+    if (item.message) {
+      const text = document.createElement('p');
+      text.textContent = item.message;
+      card.append(text);
+    }
+    const when = document.createElement('time');
+    when.textContent = timeFormat.format(new Date(item.receivedAt));
+    card.append(when);
+    box.append(card);
+  }
+}
+
+async function refresh() {
+  try {
+    await load();
+    store && store.setItem(KEY, password);
+    show(true);
+    render();
+    $('#updated').textContent = 'آخر تحديث: ' + new Intl.DateTimeFormat('ar-EG', { timeStyle: 'short', timeZone: 'Africa/Cairo' }).format(new Date());
+    return true;
+  } catch (error) {
+    if (error.message === 'auth') {
+      store && store.removeItem(KEY);
+      password = '';
+      show(false);
+      $('#error').textContent = 'كلمة السر غلط.';
+    } else if (!$('#board').hidden) {
+      $('#updated').textContent = 'تعذّر التحديث، هنحاول تاني.';
+    } else {
+      $('#error').textContent = 'حصلت مشكلة. جرّبي تاني بعد شوية.';
+    }
+    return false;
+  }
+}
+
+$('#login form').addEventListener('submit', async event => {
+  event.preventDefault();
+  password = $('#pw').value;
+  items.clear();
+  latest = '';
+  $('#error').textContent = '';
+  await refresh();
+});
+$('#refresh').addEventListener('click', refresh);
+$('#logout').addEventListener('click', () => {
+  store && store.removeItem(KEY);
+  password = '';
+  items.clear();
+  latest = '';
+  $('#pw').value = '';
+  show(false);
+});
+setInterval(() => { if (password && !document.hidden) refresh(); }, 30000);
+document.addEventListener('visibilitychange', () => { if (password && !document.hidden) refresh(); });
+if (password) refresh();
+</script>
+</body>
+</html>
