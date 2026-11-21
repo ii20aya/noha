@@ -46,28 +46,21 @@
     <p class="verse" dir="rtl" lang="ar">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ</p>
     <p class="verse-source" data-copy="verseEnd"></p>
     <p class="letter-text" data-copy="familyIntro"></p>
-    <div class="family-pair"><strong data-copy="groomFamily"></strong><strong data-copy="brideFamily"></strong></div>
+    <div class="family-pair">
+      <div class="family-card"><small data-copy="groomFamilyLead"></small><small data-copy="groomFamilyTitle"></small><strong data-copy="groomFamily"></strong></div>
+      <div class="family-card"><small data-copy="brideFamilyTitle"></small><strong data-copy="brideFamily"></strong></div>
+    </div>
     <p class="letter-text" data-copy="invite"></p>
     <div class="family-pair couple-pair">
-      <div><small data-copy="groomTitle"></small><h2 data-copy="groomName"></h2></div>
-      <div><small data-copy="brideTitle"></small><h2 data-copy="brideName"></h2></div>
+      <div><h2 data-copy="groomName"></h2></div>
+      <div><h2 data-copy="brideName"></h2></div>
     </div>
     <p class="ceremony-date" data-copy="date"></p>
-    <p class="countdown-caption" data-copy="countdown"></p>
     <div class="countdown">
       <div><strong data-count="days">00</strong><span data-copy="days"></span></div>
       <div><strong data-count="hours">00</strong><span data-copy="hours"></span></div>
       <div><strong data-count="minutes">00</strong><span data-copy="minutes"></span></div>
       <div><strong data-count="seconds">00</strong><span data-copy="seconds"></span></div>
-    </div>
-  </section>
-  <section class="dress section">
-    <div class="dress-card">
-      <h2 data-copy="dress"></h2>
-      <div class="ornament" aria-hidden="true">◇</div>
-      <p data-copy="dressLine"></p>
-      <small data-copy="dressNote"></small>
-      <div class="ornament" aria-hidden="true">✦</div>
     </div>
   </section>
   <section id="rsvp" class="rsvp section">
@@ -95,15 +88,12 @@
   <section class="venue section">
     <div class="ornament" aria-hidden="true">✦</div>
     <h2 data-copy="where"></h2>
-    <p data-copy="venueLead"></p>
     <h3 data-copy="hotel"></h3>
     <p class="hall-name" data-copy="hall"></p>
-    <p class="address" data-copy="address"></p>
     <div class="map-wrap">
       <a id="directions" class="primary" target="_blank" rel="noopener" data-copy="directions"></a>
       <div id="map"></div>
     </div>
-    <small data-copy="pinNote"></small>
     <div class="ornament" aria-hidden="true">✦</div>
     <p data-copy="end"></p>
   </section>
@@ -115,9 +105,3 @@
 </main>
 </body>
 </html>
-
-
-
-
-
-
