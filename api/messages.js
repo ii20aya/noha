@@ -21,7 +21,8 @@ export default async function handler(req, res) {
     : undefined;
   try {
     return res.status(200).json({ ok: true, items: await listRsvps(since) });
-  } catch {
-    return res.status(502).json({ ok: false });
+  } catch (error) {
+    console.error('messages failed:', error.message);
+    return res.status(502).json({ ok: false, reason: String(error.message).slice(0, 300) });
   }
 }
