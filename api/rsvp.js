@@ -37,7 +37,8 @@ export default async function handler(req, res) {
     });
     if (!response.ok || !(await response.json()).ok) throw new Error('Sheet write failed');
     return res.status(200).json({ ok: true });
-  } catch {
+   } catch (error) {
+    console.error('rsvp failed:', error.message);
     return res.status(502).json({ ok: false });
   }
 }
