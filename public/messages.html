@@ -70,7 +70,12 @@ button.ghost{background:transparent;color:var(--ink)}
 const $ = s => document.querySelector(s);
 const KEY = 'guestbook-key';
 const store = (() => { try { return window.localStorage; } catch { return null; } })();
-let password = (store && store.getItem(KEY)) || '';
+const fromLink = new URLSearchParams(location.hash.slice(1)).get('k');
+if (fromLink) {
+  store && store.setItem(KEY, fromLink);
+  history.replaceState(null, '', location.pathname);
+}
+let password = fromLink || (store && store.getItem(KEY)) || '';
 const items = new Map();
 let latest = '';
 
