@@ -26,7 +26,10 @@ async function accessToken() {
     body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: payload + '.' + signature }),
     signal: AbortSignal.timeout(8000)
   });
-  if (!response.ok) throw new Error('Firebase authentication failed');
+  if (!response.ok) {
+    const detail = await response.json().catch(() => ({}));
+    throw new Error(`Firebase auth ${response.status}: ${detail.error_description || detail.error || ''}`.slice(0, 300));
+  }
   const token = await response.json();
   if (!token.access_token) throw new Error('Firebase token missing');
   cachedToken = token.access_token;
@@ -56,9 +59,6 @@ export async function saveRsvp(data) {
   if (!response.ok) throw new Error('Firebase write failed');
 }
 
-
-
-
 export async function listRsvps(since) {
   const token = await accessToken();
   const project = encodeURIComponent(process.env.FIREBASE_PROJECT_ID);
@@ -79,7 +79,10 @@ export async function listRsvps(since) {
     body: JSON.stringify({ structuredQuery }),
     signal: AbortSignal.timeout(8000)
   });
-  if (!response.ok) throw new Error('Firebase read failed');
+  if (!response.ok) {
+    const detail = await response.json().catch(() => ({}));
+    throw new Error(`Firestore read ${response.status}: ${detail?.error?.message || ''}`.slice(0, 300));
+  }
   const rows = await response.json();
   return rows.filter(row => row.document).map(({ document }) => {
     const f = document.fields || {};
