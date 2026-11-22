@@ -190,3 +190,12 @@ body:has(#invitation:not([hidden])) .controls button{background:#fff7e7;color:#6
 .family-pair:not(.couple-pair) .family-card + .family-card{border-inline-start:1px solid #b08a5b66}
 .couple-pair{grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;max-width:620px}
 .couple-and{font:400 clamp(20px,5vw,26px)/1 var(--serif);color:#b08a5b;translate:0 .28em}
+
+
+/* Fathers' names: one line each; stacked on phones, side by side on wider screens */
+.family-pair:not(.couple-pair){max-width:640px}
+@media(max-width:640px){
+  .family-pair:not(.couple-pair){grid-template-columns:1fr;max-width:420px}
+  .family-pair:not(.couple-pair) .family-card{padding-inline:0}
+  .family-pair:not(.couple-pair) .family-card + .family-card{border-inline-start:0;border-top:1px solid #b08a5b66;margin-top:18px;padding-top:18px}
+}
